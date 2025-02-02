@@ -3,9 +3,9 @@ import shutil
 
 
 # Paths to the image and label directories
-image_dir = 'C:\\code\\poker_glasses\\Images'
-label_dir = 'C:\\code\\poker_glasses\\YOLO_Annotations'
-output_dir = 'C:\\code\\poker_glasses\\output'
+image_dir = 'Images/Images'
+label_dir = 'YOLO_Annotations/YOLO_Annotations'
+output_dir = 'output'
 
 
 # Ensure the output directory exists
@@ -27,7 +27,8 @@ class_names = [
     "10_of_spades", "10_of_clubs", "10_of_diamonds", "10_of_hearts",
     "jack_of_spades", "jack_of_clubs", "jack_of_diamonds", "jack_of_hearts",
     "queen_of_spades", "queen_of_clubs", "queen_of_diamonds", "queen_of_hearts",
-    "king_of_spades", "king_of_clubs", "king_of_diamonds", "king_of_hearts"
+    "king_of_spades", "king_of_clubs", "king_of_diamonds", "king_of_hearts",
+    "joker"
 ]
 
 
@@ -39,18 +40,23 @@ for label_file in os.listdir(label_dir):
             lines = f.readlines()
             for line in lines:
                 class_id = int(line.split()[0])  # Extract class ID
+                if class_id < 0 or class_id >= len(class_names):
+                    print(f"Invalid class_id {class_id} in file {label_file}")
+                    continue  # Skip invalid class_id
                 class_name = class_names[class_id]  # Map class ID to class name
-               
+
                 # Get the corresponding image file
                 image_file = label_file.replace('.txt', '.jpg')  # or .png, depending on your dataset
-               
+
                 # Create the class folder if it doesn't exist
                 class_dir = os.path.join(output_dir, class_name)
                 if not os.path.exists(class_dir):
                     os.makedirs(class_dir)
-               
+
                 # Move the image to the correct class folder
                 src_image_path = os.path.join(image_dir, image_file)
                 dst_image_path = os.path.join(class_dir, image_file)
                 if os.path.exists(src_image_path):
                     shutil.copy(src_image_path, dst_image_path)
+                else:
+                    print(f"Image file {src_image_path} does not exist")
