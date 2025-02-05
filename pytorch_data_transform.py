@@ -2,6 +2,10 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
+# Define the directories for training and validation datasets
+train_dir = 'train'
+valid_dir = 'validate'
+
 # Define image transformations (resize, normalize, convert to tensor)
 transform = transforms.Compose([
     transforms.Resize((224, 224)),  # Resize to match input size for models like ResNet
